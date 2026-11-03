@@ -1,0 +1,44 @@
+#!/bin/sh
+# Multi-monitor helper for this laptop.
+#   display-toggle dual    -> internal panel + first connected external output
+#   display-toggle laptop  -> internal panel only
+#
+# Override the internal output with INTERNAL=... if your Xorg driver uses
+# another name (for example eDP-1).
+
+internal="${INTERNAL:-LVDS1}"
+external="${EXTERNAL:-}"
+
+find_external() {
+    for output in DP1 HDMI1 VGA1; do
+        if xrandr --query 2>/dev/null | grep -q "^${output} connected"; then
+            printf '%s\n' "$output"
+            return 0
+        fi
+    done
+    return 1
+}
+
+case "$1" in
+    dual)
+        [ -n "$external" ] || external="$(find_external || true)"
+        if [ -n "$external" ]; then
+            xrandr --output "$internal" --auto --primary \
+                   --output "$external" --auto --right-of "$internal"
+        else
+            xrandr --output "$internal" --auto --primary
+        fi
+        ;;
+    laptop)
+        for output in DP1 HDMI1 VGA1; do
+            xrandr --output "$output" --off 2>/dev/null || true
+        done
+        xrandr --output "$internal" --auto --primary
+        ;;
+    *)
+        echo "Usage: $0 dual|laptop" >&2
+        exit 1
+        ;;
+esac
+
+i3-msg restart >/dev/null 2>&1 || true

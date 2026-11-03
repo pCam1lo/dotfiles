@@ -1,28 +1,31 @@
 #!/bin/sh
+# Change the default sink volume.
+# Usage: volume_control -s +5 -m 125
+#        volume_control -s -5 -m 125
 
-# default
 step=+5
 vol_max=125
 
-cur_vol_left=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]\+%' | sed -n '1p'| sed 's/%//g')
-cur_vol_right=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]\+%' | sed -n '2p' | sed 's/%//g')
-cur_vol_average=$(((cur_vol_left+cur_vol_right)/2))
-
-while getopts s:m: flag
-do
-    case "${flag}" in
-        s) step=${OPTARG};;
-        m) vol_max=${OPTARG};;
-        *) echo "Usage: -s <+value/-value> -m <max volume>";;
+while getopts "s:m:" opt; do
+    case "$opt" in
+        s) step="$OPTARG" ;;
+        m) vol_max="$OPTARG" ;;
+        *) echo "Usage: $0 -s +N|-N -m MAX" >&2; exit 1 ;;
     esac
 done
 
-new_vol=$((cur_vol_average + step))
+cur_vol_left=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]\+%' | sed -n '1p' | sed 's/%//g')
+cur_vol_right=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]\+%' | sed -n '2p' | sed 's/%//g')
+[ -n "$cur_vol_left" ] || cur_vol_left=0
+[ -n "$cur_vol_right" ] || cur_vol_right="$cur_vol_left"
+cur_vol_average=$(( (cur_vol_left + cur_vol_right) / 2 ))
 
-if [ "$new_vol" -le "0" ]; then
+new_vol=$(( cur_vol_average + step ))
+
+if [ "$new_vol" -le 0 ]; then
     pactl set-sink-volume @DEFAULT_SINK@ 0%
-elif [ "$new_vol" -ge "$vol_max" ] ; then
-    pactl set-sink-volume @DEFAULT_SINK@ "$vol_max"%
+elif [ "$new_vol" -ge "$vol_max" ]; then
+    pactl set-sink-volume @DEFAULT_SINK@ "${vol_max}%"
 else
-    pactl set-sink-volume @DEFAULT_SINK@ "$step"%
+    pactl set-sink-volume @DEFAULT_SINK@ "${new_vol}%"
 fi

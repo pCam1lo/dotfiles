@@ -1,11 +1,11 @@
 #!/bin/sh
+# Show whether the default source is muted.
 
-dir_icons="/usr/local/bin/icons"
-
+icons="${XDG_DATA_HOME:-$HOME/.local/share}/keyitdev/icons"
 mute=$(pactl get-source-mute @DEFAULT_SOURCE@ | sed -n 's/^Mute: //p')
 
 if [ "$mute" = "yes" ]; then
-    dunstify -a "Microphone" "Microphone" "Microphone is muted" -r 100 -i /usr/local/bin/icons/mic-off.svg
-elif [ "$mute" = "no" ]; then
-    dunstify -a "Microphone" "Microphone" "Microphone is unmuted" -r 100 -i /usr/local/bin/icons/mic.svg
+    dunstify -a "Microphone" "Microphone" "Microphone is muted" -r 100 -i "$icons/mic-off.svg"
+else
+    dunstify -a "Microphone" "Microphone" "Microphone is unmuted" -r 100 -i "$icons/mic.svg"
 fi

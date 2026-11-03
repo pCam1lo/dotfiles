@@ -38,7 +38,7 @@ prompt {
   padding: 1.6% 0% 1.5% 1.2%;
   background-color: @al;
   text-color: @fg;
-  font: "Iosevka Nerd Font 12";
+  font: "JetBrainsMono Nerd Font 12";
 }
 
 entry {

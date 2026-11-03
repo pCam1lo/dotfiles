@@ -1,321 +1,245 @@
-# Keyitdev Dotfiles
-Arch dotfiles. i3 dotfiles.
+# i3 dotfiles for Arch Linux
 
-![Stars](https://img.shields.io/github/stars/keyitdev/dotfiles?color=dd864a&labelColor=1b1b25&style=for-the-badge)
-![Forks](https://img.shields.io/github/forks/keyitdev/dotfiles?color=bf616a&labelColor=1b1b25&style=for-the-badge)
-[![Ko-fi](https://img.shields.io/badge/support_me_on_ko--fi-F16061?style=for-the-badge&logo=kofi&logoColor=f5f5f5)](https://ko-fi.com/keyitdev)
+A small, keyboard-driven i3 setup with Polybar, Picom, Rofi and Dunst.
+It is based on [Keyitdev/dotfiles](https://github.com/Keyitdev/dotfiles) and
+adapted for a 1366x768 laptop with an `ACAD`/`BAT1` power supply, `LVDS1`
+internal display and `wlan0` Wi-Fi.
 
+The installer is intentionally conservative: it writes only user
+configuration into `$HOME`, creates backups, and never changes the display
+manager or runs a full system upgrade.
 
-These dotfiles are built for a simple and efficient **Arch Linux** environment using **i3** (X11) as the window manager.
+## Requirements
 
-This repository mirrors the directory structure of the operating system, so to apply the configurations, simply copy the files into your system.
-It also includes many optional packages and tools that I personally use - you don't need to install all of them. For more details, refer to the [detailed information](#detailed-information). Also if you're looking for older versions, check out the [other branches](https://github.com/Keyitdev/dotfiles/branches/all).
-
-### [Installation](#installation) · [Contributions](#support-and-contributions) · [Detailed information](#detailed-information)
-
-## Showcase
-
-![](https://github.com/Keyitdev/screenshots/blob/master/dotfiles/v3/screenshots/2.png?raw=true)
+- Arch Linux or an Arch-based distribution (EndeavourOS, CachyOS, etc.).
+- `pacman` and `sudo`.
+- An X11 session. The configuration uses Picom and X11-only tools.
+- A display manager is optional. SDDM/LightDM are not modified by the
+  installer; existing i3 session entries are provided by the `i3-wm` package.
 
 ## Installation
-Install base system.
-```sh
-sudo pacman -S --needed archlinux-keyring base base-devel linux linux-firmware git pulseaudio xorg xorg-xinit 
-```
-Install yay.
-```sh
-git clone https://aur.archlinux.org/yay-bin.git "$HOME"/.srcs/yay && cd "$HOME"/.srcs/yay/ && makepkg -si
-```
-Install dependencies.
-```sh
-yay -S --needed btop code dunst fastfetch feh i3-wm i3lock-color kitty mate-polkit mpd ncmpcpp papirus-icon-theme picom polybar rofi xss-lock zsh zed ttf-roboto-mono ttf-opensans ttf-iosevka-nerd ffcast inotify-tools jq libnotify rofi-vscode-mode scrot slop upower xclip
-```
 
-Clone this repository and copy files.
-```sh
-git clone -b v4 --depth 1 https://www.github.com/keyitdev/dotfiles.git "$HOME"/dotfiles
-cp -ri "$HOME"/dotfiles/home/. "$HOME"/
-sudo cp -ri "$HOME"/dotfiles/usr/.  /usr/
-```
-Set zsh as default shell.
-```sh
-chsh -s /bin/zsh
-```
-> [!NOTE]
-And that’s it! You’ve successfully installed the base system and riced programs. However, your system may still be missing some important programs such as a media player or even a web browser. Steps below are optional, but I highly recommend checking them out.
-
-Set up networking.
-```sh
-yay -S dhcpcd iwd
-sudo systemctl enable --now dhcpcd.service iwd.service
-```
-
-Install optional dependencies.
-```sh
-yay -S --needed bc dmenu downgrade fzf mpc nano vim net-tools ntp tree vi wget
-```
-```sh
-yay -S --needed 7zip czkawka-gui firefox firefox-beta-bin firefox-developer-edition gimp inkscape gparted libreoffice-fresh mpv vlc nemo nemo-fileroller obs-studio obsidian qalculate-gtk rsync vnstat yt-dlp
-```
-```sh
-yay -S --needed cpupower-gui ntfs-3g nvidia cuda nvtop vulkan-radeon
-```
-```sh
-yay -S --needed cloc cronie docker gcc clang make npm python pypy python-numpy python-pandas python-scipy python-matplotlib python-requests tmux
-```
-```sh
-yay -S --needed noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra
-```
-
-Enable optional services.
-```sh
-sudo systemctl enable ntpd.service
-sudo systemctl enable vnstat.service
-```
-
-## Support and Contributions
-
-You can support me simply by dropping a **star** on **[github](https://github.com/Keyitdev/dotfiles/)**.
-If you enjoyed it and would like to show your appreciation, you can **tip me** using **[kofi]()**. 
-[![Ko-fi](https://img.shields.io/badge/Support_me_on_ko--fi-F16061?style=flat-square&logo=kofi&logoColor=f5f5f5)](https://ko-fi.com/keyitdev)
-
-
-Feel free to create an issue or pull request. 
-- However, check the issues tab first to **avoid creating duplicates**.
-- When opening an issue, please **provide detailed information** about the problem. I can't help if you just write something like "this thing is not working" - include as much relevant information as possible.
-- Before starting to work on a pull request for a new feature, please **open an issue first** so we can discuss about it.
-- **Avoid overusing AI**. We don't need 500 emojis. More lines of code doesn't mean better code - focus on simplicity and quality.
-
-If you need any help, you can ask questions here on **[discussions](https://github.com/Keyitdev/dotfiles/discussions/categories/q-a)** or contact me on **[discord](https://discord.com/users/908702082578665474)** / **[reddit](https://www.reddit.com/user/Keyitdev)**.
-
-Thanks to all contributors! :D
-
-## Detailed information
+Update your system first, manually:
 
 ```sh
+sudo pacman -Syu
+```
+
+Then clone and install:
+
+```sh
+git clone https://github.com/pCam1lo/dotfiles.git
+cd dotfiles
+./install.sh --dry-run     # review the actions
+./install.sh               # install
+```
+
+Log out and choose the **i3** session at the login screen.
+
+Useful options:
+
+```sh
+./install.sh --no-packages # only copy files
+./install.sh --with-gtk    # also install GTK settings.ini (affects XFCE too)
+./install.sh --with-xinitrc
+```
+
+The installer does **not** run `pacman -Syu`, does **not** enable SDDM or
+LightDM, and does **not** replace `~/.config/xfce4`.
+
+## Repository structure
+
+```text
 .
-├── home
-│   ├── .config
-│   │   ├── alacritty
-│   │   │   ├── alacritty.toml
-│   │   │   └── colors.toml
-│   │   ├── btop
-│   │   │   └── btop.conf
-│   │   ├── Code - OSS
-│   │   │   └── User
-│   │   │       └── settings.json
-│   │   ├── dunst
-│   │   │   └── dunstrc
-│   │   ├── fastfetch
-│   │   │   └── config.jsonc
-│   │   ├── gtk-3.0
-│   │   │   └── settings.ini
-│   │   ├── gtk-4.0
-│   │   │   ├── colors.css
-│   │   │   ├── gtk.css
-│   │   │   └── settings.ini
-│   │   ├── i3
-│   │   │   └── config
-│   │   ├── kitty
-│   │   │   └── kitty.conf
-│   │   ├── mpd
-│   │   │   └── mpd.conf
-│   │   ├── ncmpcpp
-│   │   │   └── config
-│   │   ├── .obsidian
-│   │   │   └── themes
-│   │   │       └── Keyitdev
-│   │   ├── picom
-│   │   │   └── picom.conf
-│   │   ├── polybar
-│   │   │   ├── colors.ini
-│   │   │   ├── config.ini
-│   │   │   └── launch.sh
-│   │   ├── rofi
-│   │   │   ├── colors.rasi
-│   │   │   ├── dmenu.rasi
-│   │   │   ├── main.rasi
-│   │   │   └── main_without_icons.rasi
-│   │   └── zed
-│   │       └── settings.json
-│   ├── Pictures
-│   │   └── wallpapers
-│   │       └── background.png
-│   ├── .xinitrc
-│   └── .zshrc
-└── usr
-    ├── lib
-    │   └── udev
-    │       └── rules.d
-    │           └── 90-light-backlight.rules
-    ├── local
-    │   └── bin
-    │       ├── asus_fan_listener
-    │       ├── asus_fan_toggle
-    │       ├── battery_listener
-    │       ├── brightness_control
-    │       ├── brightness_level
-    │       ├── icons
-    │       │   ├── battery.svg
-    │       │   ├── mic-off.svg
-    │       │   ├── mic.svg
-    │       │   ├── moon.svg
-    │       │   ├── sun.svg
-    │       │   ├── volume-1.svg
-    │       │   ├── volume-2.svg
-    │       │   ├── volume-3.svg
-    │       │   ├── volume.svg
-    │       │   └── volume-x.svg
-    │       ├── lock
-    │       ├── microphone_mute
-    │       ├── rofi-powermenu
-    │       ├── rofi-screenshot
-    │       ├── screenshot
-    │       ├── touchpad_toggle
-    │       ├── volume_control
-    │       ├── volume_level
-    │       └── volume_mute
-    └── share
-        ├── fonts
-        │   └── Feather.ttf
-        └── themes
-            └── gtk-dark-keyitdev
+├── install.sh                  # safe Arch installer
+├── home/
+│   ├── .config/
+│   │   ├── i3/config           # window manager
+│   │   ├── alacritty/          # terminal colors
+│   │   ├── polybar/            # top bar, colors and launcher
+│   │   ├── picom/picom.conf    # compositor, inactive-window opacity
+│   │   ├── rofi/               # launcher, power menu and screenshot menu
+│   │   └── dunst/dunstrc       # notifications
+│   ├── Pictures/wallpapers/    # default wallpaper
+│   └── .xinitrc                # optional startx entry
+└── usr/
+    ├── local/bin/              # helper scripts installed to ~/.local/bin
+    │   ├── icons/              # notification icons
+    │   ├── battery_listener
+    │   ├── brightness_control
+    │   ├── brightness_level
+    │   ├── display-toggle
+    │   ├── lock
+    │   ├── microphone_mute
+    │   ├── rofi-powermenu
+    │   ├── rofi-screenshot
+    │   ├── screenshot
+    │   ├── touchpad_toggle
+    │   ├── volume_control
+    │   ├── volume_level
+    │   └── volume_mute
+    ├── share/fonts/Feather.ttf
+    └── share/themes/gtk-dark-keyitdev/
 ```
 
-### Dependencies
+The `usr/` tree is a source tree, not a request to write to `/usr`. The
+installer copies scripts to `~/.local/bin`, fonts to
+`~/.local/share/fonts`, and the GTK theme to `~/.themes`.
 
-#### Base (~190 Mib)
-- `archlinux-keyring base base-devel linux linux-firmware`  - base
-- `dhcpcd` - DHCP client *(optional)*  
-- `git` - version control system
-- `iwd`- wireless network daemon *(optional)*  
-- `pulseaudio` - sound server for handling audio
-- `xorg` - display server
-- `xorg-xinit` - script to manually start the X server without a display manager *(optional)*  
+## Packages
 
-#### Programs (~607 Mib)
-- `btop` - resource monitor
-- `code` - code editor
-- `dunst` - notification deamon
-- `fastfetch` - system information fetcher
-- `feh` - wallpaper setter  
-- `i3-wm` - dynamic tiling window manager  
-- `kitty` - terminal emulator
-- `i3lock-color` - lock screen *(AUR)*
-- `mate-polkit` - controlling system-wide privileges
-- `mpd` - music playback service
-- `ncmpcpp` - MPD client
-- `papirus-icon-theme` - modern icon pack
-- `picom` - compositor for X11
-- `polybar` - status bar
-- `rofi` - application launcher
-- `xss-lock` - hooks into XScreenSaver events to lock the screen when idle
-- `zsh` - shell
-- `zed` - code editor
+The installer installs only the missing packages with
+`sudo pacman -S --needed`. It does not upgrade the system.
 
-#### Fonts (~1040 Mib)
-- `ttf-roboto-mono ttf-opensans ttf-iosevka-nerd`
+| Package | Purpose |
+|---|---|
+| `i3-wm`, `i3status` | Window manager and optional status command |
+| `polybar` | Top bar |
+| `picom` | Compositor, fading and inactive-window opacity |
+| `dunst` | Notification daemon |
+| `feh` | Wallpaper setter |
+| `xss-lock` | Locks the screen before suspend |
+| `rofi` | Application launcher, power menu and screenshot menu |
+| `alacritty` | Terminal used by `Super+Enter` |
+| `dmenu` | Fallback launcher on `Ctrl+F3` |
+| `xclip` | Copies screenshots to the clipboard |
+| `maim`, `slop` | Screenshot selection |
+| `dex` | Runs XDG autostart entries |
+| `libnotify` | `notify-send` notifications |
+| `xorg-xrandr`, `xorg-xdpyinfo` | Display and X11 information |
+| `xorg-xinput` | Touchpad toggle |
+| `brightnessctl` | Brightness control without root |
+| `playerctl` | Media keys |
+| `upower` | Battery listener |
+| `network-manager-applet` | Network tray applet |
+| `polkit-gnome` | Polkit authentication agent |
+| `networkmanager-dmenu` | Network menu from Polybar |
+| `papirus-icon-theme` | Rofi icons |
+| `ttf-roboto-mono` | Rofi and Dunst font |
+| `ttf-opensans` | i3 and lock-screen font |
+| `ttf-jetbrains-mono-nerd` | Polybar and Rofi Nerd Font |
 
-#### Scripts (~3 Mib)
-- `ffcast` - script for recording your screen *(AUR)* 
-- `inotify-tools` - command-line utilities for monitoring filesystem events
-- `jq` - JSON processor  
-- `libnotify` - library for sending desktop notifications  
-- `rofi-vscode-mode` - lauch recently used vsc workspace
-- `scrot` - screenshot utility  
-- `slop` - select a region on screen
-- `upower` - power management daemon
-- `xclip` - clipboard manager for X
+Optional:
 
-### Additional dependencies
-All of these packages are optional, but without them, some things may not work correctly.
-I recommend at least installing basic utilities.
-To install all packages, you need approximately 8.4 GiB of free disk space (5 GiB takes cuda package).
+| Package | Purpose |
+|---|---|
+| `i3lock-color` (AUR) | Fancy lock screen; the `lock` script falls back to plain `i3lock` |
+| `mpd`, `ncmpcpp` | Music client; the `Super+Z` binding is commented out until installed |
+| `brave-bin` (AUR) | Browser; no browser is installed by default and Firefox is not used |
 
-#### Basic utilities (optional) (~21 Mib)
-`yay -S bc dmenu downgrade fzf mpc nano vim net-tools ntp tree vi wget`
-- `bc` - command-line calculator  
-- `dmenu` - app launcher  
-- `downgrade` - pkg downgrader  
-- `fzf` - fuzzy finder  
-- `mpc` - comand-line MPD client  
-- `nano vim` - text editors  
-- `net-tools` - network tools  
-- `ntp` - time sync  
-- `tree` - directory tree viewer  
-- `vi` - basic text editor  
-- `wget` - command-line downloader  
+## Keybindings
 
-#### Basic programs (optional) (~1700Mib)
-`yay -S 7zip czkawka-gui firefox firefox-beta-bin firefox-developer-edition gimp inkscape gparted libreoffice-fresh mpv vlc nemo nemo-fileroller obs-studio obsidian qalculate-gtk rsync vnstat yt-dlp`
-- `7zip` - archiver  
-- `czkawka-gui` - duplicate finder  
-- `firefox firefox-beta-bin firefox-developer-edition`  - web browsers
-- `gimp inkscape` - image editors
-- `gparted` - partition tool
-- `libreoffice-fresh` - office suite  
-- `mpv vlc` - media players 
-- `nemo nemo-fileroller` - file manager  
-- `obs-studio` - screen recorder  
-- `obsidian` - notes app  
-- `qalculate-gtk` - calculator with advanced functions
-- `rsync` - file sync and backup  
-- `vnstat` - network monitor 
-- `yt-dlp` - video downloader  
+`$mod` is the **Super** key.
 
-#### Drivers (optional) (~4900 Mib)
-`yay -S cpupower-gui ntfs-3g nvidia cuda nvtop vulkan-radeon`
-- `cpupower-gui` - CPU settings 
-- `ntfs-3g` - NTFS filesystem support  
-- `nvidia cuda nvtop` - NVIDIA drivers
-- `vulkan-radeon` - AMD Vulkan 
+| Key | Action |
+|---|---|
+| `Super+Enter` | Open Alacritty |
+| `Super+Q` | Close the focused window |
+| `Super+Shift+Q` | Close the focused window (alternate) |
+| `Super+D` | Rofi application launcher |
+| `Super+A` | Rofi launcher with the top bar style |
+| `Super+E` | Thunar |
+| `Super+S` | Screenshots folder in Thunar |
+| `Super+X` | Power menu |
+| `Super+C` | Screenshot menu |
+| `Super+I` | Lock screen |
+| `Super+B` | Move workspace to the output on the right |
+| `Super+N` | Internal panel + first connected external output |
+| `Super+M` | Internal panel only |
+| `Super+J/K/L/;` | Focus left/down/up/right |
+| `Super+Shift+J/K/L/;` | Move window left/down/up/right |
+| `Super+1..0` | Switch workspace |
+| `Super+Shift+1..0` | Move window to workspace |
+| `Super+R` | Resize mode |
+| `Super+G` | Gap adjustment mode |
+| `Super+Shift+C` | Reload i3 |
+| `Super+Shift+R` | Restart i3 |
+| `Super+Shift+E` | Exit i3 |
+| `Ctrl+F1/F2` | Alacritty |
+| `Ctrl+F3` | `dmenu_run` |
+| `Ctrl+F4` | Stop Picom |
 
-#### Programming (optional) (~1000Mib)
-`yay -S cloc cronie docker gcc clang make npm python pypy python-numpy python-pandas python-scipy python-matplotlib python-requests tmux`
-- `cloc` - counts lines of code  
-- `cronie` - task scheduler  
-- `docker` - container platform  
-- `gcc clang make` - compilers and build tools  
-- `npm` - Node.js package manager  
-- `python pypy python-numpy python-pandas python-scipy python-matplotlib python-requests` - Python interpreters and libraries  
-- `tmux` - terminal multiplexer  
+## Hardware notes
 
-####  Emoji fonts (~750 MiB)
-`yay -S noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra`
-- `noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra`
+This fork was adapted for the following devices. Change them if your machine
+uses different names:
 
-### Keybindings Overview
+| Item | Value | Where |
+|---|---|---|
+| Battery | `BAT1` | `~/.config/polybar/config.ini` |
+| AC adapter | `ACAD` | `~/.config/polybar/config.ini` |
+| Internal display | `LVDS1` | `~/.local/bin/display-toggle` |
+| External outputs | `DP1`, `HDMI1`, `VGA1` | `~/.local/bin/display-toggle` |
+| CPU temperature | `/sys/class/hwmon/hwmon3/temp1_input` | `~/.config/polybar/config.ini` |
+| Wi-Fi interface | `wlan0` | `~/.config/polybar/config.ini` |
+| Backlight | `intel_backlight` | `~/.config/polybar/config.ini` |
 
-| Keybinding | Action | Keybinding | Action |
-|---|---|---|---|
-| `Mod + Return` | Launch terminal | `Mod + H` | Split in horizontal orientation |
-| `Mod + D` | Open menu | `Mod + V` | Split in vertical orientation |
-| `Mod + Shift + Q` | Close focused window | `Mod + Space` | Toggle focus mode (tiling / floating) |
-| `Mod + F` | Toggle fullscreen | `Mod + Shift + Space` | Toggle tiling / floating mode |
-| `Mod + Q` | Launch Firefox Developer Edition | `Mod + J/K/L/;` | Change focus direction |
-| `Mod + W` | Open recent VSC workspace | `Mod + Shift + J/K/L/;` | Move focused window |
-| `Mod + E` | Open file manager (Nemo) | `Mod + 1 to 0` | Switch to workspaces 1 to 10 |
-| `Mod + A` | Open menu (drun version) | `Mod + Shift + 1 to 0` | Move focused window to workspaces 1 to 10 |
-| `Mod + S` | Open screenshots dir in Nemo | `Mod + Shift + E` | Exit i3 |
-| `Mod + Z` | Launch ncmpcpp | `Mod + Shift + R` | Restart i3 |
-| `Mod + X` | Open powermenu | `Mod + Shift + C` | Reload i3 config file |
-| `Mod + C` | Launch screenshot script | `Mod + B` | Move workspace to the other monitor |
-| `Mod + I` | Lock screen | `Mod + N` | Set dual monitor mode |
-| `Mod + G` | Enter gap mode | `Mod + M` | Set single-monitor mode |
+Check your own values with:
 
-### Color palette
+```sh
+ls /sys/class/power_supply/
+ls /sys/class/backlight/
+for d in /sys/class/hwmon/hwmon*; do echo "$d: $(cat "$d/name")"; done
+xrandr --query | grep connected
+ip -br link
+```
 
-|   Bg   |   Bg 2   |   Bg 3   |  Border  |   Fg   |  White   |  Gray   |  Black   |
-|:------:|:--------:|:--------:|:--------:|:------:|:--------:|:-------:|:--------:|
-| `#1b1b25` | `#282A36` | `#16161e` | `#343746` | `#dedede` | `#eeffff` | `#727480` | `#15121c` |
-| ![#1b1b25](https://placehold.co/77x15/1b1b25/1b1b25.png) | ![#282A36](https://placehold.co/77x15/282A36/282A36.png) | ![#16161e](https://placehold.co/77x15/16161e/16161e.png) | ![#343746](https://placehold.co/77x15/343746/343746.png) | ![#dedede](https://placehold.co/77x15/dedede/dedede.png) | ![#eeffff](https://placehold.co/77x15/eeffff/eeffff.png) | ![#727480](https://placehold.co/77x15/727480/727480.png) | ![#15121c](https://placehold.co/77x15/15121c/15121c.png) |
+If the internal output is `eDP-1` instead of `LVDS1`, run:
 
-| Red       | Green    | Yellow   | Blue     | Purple   | Cyan     | Pink     | Orange   |
-|:------:|:--------:|:--------:|:--------:|:------:|:--------:|:-------:|:--------:|
-| `#cb5760` | `#999f63`| `#d4a067`| `#6c90a8`| `#776690`| `#528a9b`| `#ffa8c5`| `#c87c3e`|
-| ![#cb5760](https://placehold.co/77x15/cb5760/cb5760.png) | ![#999f63](https://placehold.co/77x15/999f63/999f63.png) | ![#d4a067](https://placehold.co/77x15/d4a067/d4a067.png) | ![#6c90a8](https://placehold.co/77x15/6c90a8/6c90a8.png) | ![#776690](https://placehold.co/77x15/776690/776690.png) | ![#528a9b](https://placehold.co/77x15/528a9b/528a9b.png) | ![#ffa8c5](https://placehold.co/77x15/ffa8c5/ffa8c5.png) | ![#c87c3e](https://placehold.co/77x15/c87c3e/c87c3e.png) |
+```sh
+INTERNAL=eDP-1 ~/.local/bin/display-toggle dual
+```
 
-## License
-  
-Distributed under the **[GPLv3+](https://www.gnu.org/licenses/gpl-3.0.html) License**.    
-Copyright (C) 2022-2026 Keyitdev.
+## Picom and inactive windows
+
+`~/.config/picom/picom.conf` includes:
+
+```ini
+inactive-opacity = 0.90;
+active-opacity = 1.0;
+```
+
+Change `inactive-opacity` to taste. Picom is started with an explicit config
+path so it does not depend on the current working directory.
+
+## Backups and uninstall
+
+Every replaced path is copied to:
+
+```text
+~/.local/share/dotfiles-backup/YYYYMMDD-HHMMSS/
+```
+
+Restore one file with:
+
+```sh
+cp -a ~/.local/share/dotfiles-backup/<timestamp>/.config/i3/config \
+      ~/.config/i3/config
+```
+
+To remove the setup, delete the installed user files:
+
+```sh
+rm -rf ~/.config/i3 ~/.config/polybar ~/.config/picom ~/.config/rofi ~/.config/dunst
+rm -rf ~/.local/bin/{battery_listener,brightness_control,brightness_level,display-toggle,lock,microphone_mute,rofi-powermenu,rofi-screenshot,screenshot,touchpad_toggle,volume_control,volume_level,volume_mute}
+rm -rf ~/.local/share/keyitdev
+rm -rf ~/.themes/gtk-dark-keyitdev
+```
+
+Then choose XFCE again at the login screen.
+
+## Notes
+
+- XFCE configuration is not modified. The GTK theme is installed but not
+  activated unless you run `install.sh --with-gtk`.
+- The ASUS fan scripts are copied but not started; they are specific to ASUS
+  laptops.
+- `Super+Q` closes windows. Firefox is not installed or bound.
+- Brave is not installed by default. If you install `brave-bin`, use
+  `brave` as the command in your own bindings.
+
+## Credits
+
+Based on [Keyitdev/dotfiles](https://github.com/Keyitdev/dotfiles), with
+adaptations for this laptop. See the original repository and its contributors
+for the original design.

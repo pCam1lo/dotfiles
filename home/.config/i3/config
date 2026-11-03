@@ -7,62 +7,65 @@ tiling_drag modifier titlebar
 
 font pango:Open sans 11
 exec --no-startup-id dex --autostart --environment i3
-exec --no-startup-id xss-lock --transfer-sleep-lock -- lock --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.local/bin/lock --nofork
 exec --no-startup-id xrandr --dpi 96
 
 exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/wallpapers/background.png
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
-exec_always --no-startup-id mpd &
-exec_always --no-startup-id picom &
+# Optional media daemon. Enable it after installing mpd/ncmpcpp.
+# exec_always --no-startup-id mpd &
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf &
 exec_always --no-startup-id dunst &
-exec_always --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
-exec_always --no-startup-id asus_fan_listener  &
-exec_always --no-startup-id battery_listener &
+exec_always --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+# ASUS-specific fan control: disabled by default.
+# exec_always --no-startup-id ~/.local/bin/asus_fan_listener &
+exec_always --no-startup-id ~/.local/bin/battery_listener &
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id volume_control -s +5 -m 125 && volume_level
-bindsym XF86AudioLowerVolume exec --no-startup-id volume_control -s -5 -m 125 && volume_level
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && volume_mute
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && microphone_mute
-bindsym Ctrl+F5 exec --no-startup-id asus_fan_toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.local/bin/volume_control -s +5 -m 125 && ~/.local/bin/volume_level
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/.local/bin/volume_control -s -5 -m 125 && ~/.local/bin/volume_level
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && ~/.local/bin/volume_mute
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/.local/bin/microphone_mute
+# bindsym Ctrl+F5 exec --no-startup-id ~/.local/bin/asus_fan_toggle
 bindsym XF86ScreenSaver exec --no-startup-id xset dpms force off
-bindsym XF86MonBrightnessDown exec --no-startup-id brightness_control -s -2 && brightness_level
-bindsym XF86MonBrightnessUp exec --no-startup-id brightness_control -s +2 && brightness_level
-bindsym XF86TouchpadToggle exec --no-startup-id touchpad_toggle
+bindsym XF86MonBrightnessDown exec --no-startup-id ~/.local/bin/brightness_control -s -2 && ~/.local/bin/brightness_level
+bindsym XF86MonBrightnessUp exec --no-startup-id ~/.local/bin/brightness_control -s +2 && ~/.local/bin/brightness_level
+bindsym XF86TouchpadToggle exec --no-startup-id ~/.local/bin/touchpad_toggle
 # bindsym XF86RFKill
-# bindsym XF86Calculator exec --no-startup-id nemo
+# bindsym XF86Calculator exec --no-startup-id thunar
 
-bindsym Pause exec screenshot -sa
-bindsym Print exec screenshot -sf
+bindsym Pause exec ~/.local/bin/screenshot -sa
+bindsym Print exec ~/.local/bin/screenshot -sf
 
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec alacritty
 
-# kill focused window
+# close the focused window
+bindsym $mod+q kill
 bindsym $mod+Shift+q kill
 
-bindsym $mod+q exec --no-startup-id firefox-developer-edition
-# bindsym $mod+w exec --no-startup-id code
-bindsym $mod+w exec --no-startup-id "rofi -show vscode-recent -modi vscode-recent -no-default-config -config ~/.config/rofi/main.rasi -theme-str 'prompt { enabled: false; }'"
-bindsym $mod+e exec --no-startup-id nemo
+# Super+W is free; uncomment if you want the window switcher.
+# bindsym $mod+w exec --no-startup-id rofi -show window -no-default-config -config ~/.config/rofi/main.rasi
+bindsym $mod+e exec --no-startup-id thunar
 
 bindsym $mod+a exec --no-startup-id rofi -show drun -no-default-config -config ~/.config/rofi/dmenu.rasi
-bindsym $mod+s exec --no-startup-id nemo ~/Pictures/screenshots/
+bindsym $mod+s exec --no-startup-id thunar ~/Pictures/screenshots/
 bindsym $mod+d exec --no-startup-id rofi -show drun -no-default-config -config ~/.config/rofi/main.rasi
 
-bindsym $mod+z exec --no-startup-id kitty -e ncmpcpp 
-bindsym $mod+x exec --no-startup-id rofi-powermenu
-bindsym $mod+c exec --no-startup-id rofi-screenshot
+# Optional music client: install mpd + ncmpcpp first.
+# bindsym $mod+z exec --no-startup-id alacritty -e ncmpcpp
+bindsym $mod+x exec --no-startup-id ~/.local/bin/rofi-powermenu
+bindsym $mod+c exec --no-startup-id ~/.local/bin/rofi-screenshot
 
-bindsym $mod+i exec lock
+bindsym $mod+i exec --no-startup-id ~/.local/bin/lock
 
 bindsym $mod+b move workspace to output right
-bindsym $mod+n exec xrandr --auto --output eDP-1 --mode 1920x1080 --right-of HDMI-1 && i3-msg restart &
-bindsym $mod+m exec xrandr --auto --output HDMI-1 --off && i3-msg restart &
+bindsym $mod+n exec --no-startup-id ~/.local/bin/display-toggle dual
+bindsym $mod+m exec --no-startup-id ~/.local/bin/display-toggle laptop
 
-bindsym ctrl + F1 exec --no-startup-id i3-sensible-terminal
-bindsym ctrl + F2 exec --no-startup-id kitty
-bindsym ctrl + F3 exec --no-startup-id dmenu_run
-bindsym ctrl + F4 exec --no-startup-id killall picom
+bindsym ctrl+F1 exec --no-startup-id alacritty
+bindsym ctrl+F2 exec --no-startup-id alacritty
+bindsym ctrl+F3 exec --no-startup-id dmenu_run
+bindsym ctrl+F4 exec --no-startup-id pkill picom
 
 # bindsym $mod+d exec --no-startup-id dmenu_run
 
@@ -257,6 +260,4 @@ mode "$mode_gaps_outer" {
 #for_window [class="Qalculate-gtk"] floating enable, move position center, resize set 400 600
 for_window [class="Qalculate-gtk"] floating enable, sticky enable
 
-for_window [class="Firefox Beta" title="Picture-in-Picture"] floating enable, sticky enable
-for_window [class="firefox-developer-edition" title="Picture-in-Picture"] floating enable, sticky enable
-for_window [class="Firefox" title="Picture-in-Picture"] floating enable, sticky enable
+for_window [title="Picture-in-Picture"] floating enable, sticky enable

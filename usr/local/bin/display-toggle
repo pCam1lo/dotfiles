@@ -9,6 +9,15 @@
 internal="${INTERNAL:-LVDS1}"
 external="${EXTERNAL:-}"
 
+preferred_mode() {
+    output="$1"
+    xrandr --query 2>/dev/null | awk -v out="$output" '
+        $1 == out { found = 1; next }
+        found && /^[^ ]/ { exit }
+        found && /\+/ { print $1; exit }
+    '
+}
+
 find_external() {
     for output in DP1 HDMI1 VGA1; do
         if xrandr --query 2>/dev/null | grep -q "^${output} connected"; then
@@ -19,14 +28,23 @@ find_external() {
     return 1
 }
 
+restart_polybar() {
+    if pgrep -x polybar >/dev/null 2>&1; then
+        "$HOME/.config/polybar/launch.sh" >/dev/null 2>&1 &
+    fi
+}
+
 case "$1" in
     dual)
         [ -n "$external" ] || external="$(find_external || true)"
+        xrandr --output "$internal" --auto --primary
         if [ -n "$external" ]; then
-            xrandr --output "$internal" --auto --primary \
-                   --output "$external" --auto --right-of "$internal"
-        else
-            xrandr --output "$internal" --auto --primary
+            mode="$(preferred_mode "$external")"
+            if [ -n "$mode" ]; then
+                xrandr --output "$external" --mode "$mode" --right-of "$internal"
+            else
+                xrandr --output "$external" --auto --right-of "$internal"
+            fi
         fi
         ;;
     laptop)
@@ -41,4 +59,4 @@ case "$1" in
         ;;
 esac
 
-i3-msg restart >/dev/null 2>&1 || true
+restart_polybar

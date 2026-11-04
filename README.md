@@ -187,6 +187,11 @@ uses different names:
 | Wi-Fi interface | `wlan0` | `~/.config/polybar/config.ini` |
 | Backlight | `intel_backlight` | `~/.config/polybar/config.ini` |
 
+`display-toggle dual` runs automatically when i3 starts. It sets the internal
+panel to its preferred mode and the first connected external output to its
+preferred mode, placed to the right. Use `Super+N` to reapply it and
+`Super+M` to switch to the internal panel only.
+
 Check your own values with:
 
 ```sh

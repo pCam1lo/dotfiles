@@ -36,6 +36,18 @@ cd dotfiles
 
 Log out and choose the **i3** session at the login screen.
 
+One-line install (clones to a temporary directory and runs the installer):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/pCam1lo/dotfiles/v4/bootstrap.sh | bash
+```
+
+Preview without changing anything:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/pCam1lo/dotfiles/v4/bootstrap.sh | bash -s -- --dry-run
+```
+
 Useful options:
 
 ```sh
@@ -52,6 +64,7 @@ LightDM, and does **not** replace `~/.config/xfce4`.
 ```text
 .
 ├── install.sh                  # safe Arch installer
+├── bootstrap.sh                # one-line clone + install
 ├── home/
 │   ├── .config/
 │   │   ├── i3/config           # window manager

@@ -189,8 +189,9 @@ uses different names:
 
 `display-toggle dual` runs automatically when i3 starts. It sets the internal
 panel to its preferred mode and the first connected external output to its
-preferred mode, placed to the right. Use `Super+N` to reapply it and
-`Super+M` to switch to the internal panel only.
+preferred mode. The external output is placed on the left by default. Use
+`EXTERNAL_POSITION=right ~/.local/bin/display-toggle dual` for the other side,
+`Super+N` to reapply, and `Super+M` to switch to the internal panel only.
 
 Check your own values with:
 

@@ -12,7 +12,7 @@ exec --no-startup-id xrandr --dpi 96
 exec_always --no-startup-id ~/.local/bin/display-toggle dual
 exec_always --no-startup-id ~/.local/bin/display-watch >/tmp/display-watch.log 2>&1 &
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/wallpapers/background.png
+exec_always --no-startup-id ~/.local/bin/wallpaper-restore
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 # Optional media daemon. Enable it after installing mpd/ncmpcpp.

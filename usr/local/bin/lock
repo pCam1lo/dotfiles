@@ -1,7 +1,14 @@
 #!/bin/sh
 # Lock the session. Uses i3lock-color when available, otherwise vanilla i3lock.
 
-wallpaper="${WALLPAPER:-$HOME/Pictures/wallpapers/background.png}"
+state="${XDG_CONFIG_HOME:-$HOME/.config}/i3/wallpaper"
+wallpaper="${WALLPAPER:-}"
+if [ -z "$wallpaper" ] && [ -f "$state" ]; then
+    wallpaper="$(cat "$state")"
+fi
+if [ -z "$wallpaper" ] || [ ! -f "$wallpaper" ]; then
+    wallpaper="$HOME/Pictures/wallpapers/background.png"
+fi
 font="dedede"
 green="9ece6a"
 red="db4b4b"

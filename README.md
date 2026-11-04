@@ -59,6 +59,18 @@ Useful options:
 The installer does **not** run `pacman -Syu`, does **not** enable SDDM or
 LightDM, and does **not** replace `~/.config/xfce4`.
 
+## Wallpaper picker
+
+Open Rofi with `Super+D`, search for **Wallpapers**, and choose an image from
+`~/Pictures/wallpapers`. The same menu can be opened directly with:
+
+```sh
+~/.local/bin/rofi-wallpaper
+```
+
+The selected path is stored in `~/.config/i3/wallpaper` and restored at login.
+The lock screen reads the same file, so it uses the selected wallpaper too.
+
 ## Repository structure
 
 ```text
@@ -74,6 +86,9 @@ LightDM, and does **not** replace `~/.config/xfce4`.
 │   │   ├── rofi/               # launcher, power menu and screenshot menu
 │   │   └── dunst/dunstrc       # notifications
 │   ├── Pictures/wallpapers/    # default wallpaper
+│   ├── .local/share/
+│   │   └── applications/
+│   │       └── wallpapers.desktop  # "Wallpapers" entry in Rofi
 │   └── .xinitrc                # optional startx entry
 └── usr/
     ├── local/bin/              # helper scripts installed to ~/.local/bin
@@ -89,7 +104,9 @@ LightDM, and does **not** replace `~/.config/xfce4`.
     │   ├── microphone_mute
     │   ├── rofi-powermenu
     │   ├── rofi-screenshot
+    │   ├── rofi-wallpaper
     │   ├── screenshot
+    │   ├── wallpaper-restore
     │   ├── touchpad_toggle
     │   ├── volume_control
     │   ├── volume_level
@@ -201,7 +218,8 @@ uses different names:
 
 `display-toggle dual` runs automatically when i3 starts. It sets the internal
 panel to its preferred mode and the first connected external output to its
-preferred mode. The external output is placed on the left by default.
+preferred mode, then bottom-aligns both outputs using their heights. The
+external output is placed on the left by default.
 `display-watch` checks the connected monitors every two seconds and reapplies
 the layout when a monitor is connected or disconnected. Use
 `EXTERNAL_POSITION=right ~/.local/bin/display-toggle dual` for the other side,

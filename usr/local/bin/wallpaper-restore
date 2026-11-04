@@ -1,0 +1,19 @@
+#!/bin/sh
+# Restore the wallpaper saved by rofi-wallpaper, or use the default.
+
+set -eu
+
+state="${XDG_CONFIG_HOME:-$HOME/.config}/i3/wallpaper"
+default="$HOME/Pictures/wallpapers/background.png"
+wallpaper="${WALLPAPER:-}"
+
+if [ -z "$wallpaper" ] && [ -f "$state" ]; then
+    wallpaper="$(cat "$state")"
+fi
+
+if [ -z "$wallpaper" ] || [ ! -f "$wallpaper" ]; then
+    wallpaper="$default"
+fi
+
+[ -f "$wallpaper" ] || exit 0
+feh --no-fehbg --bg-fill "$wallpaper"

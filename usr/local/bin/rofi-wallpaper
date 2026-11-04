@@ -1,0 +1,26 @@
+#!/bin/sh
+# Pick a wallpaper from ~/Pictures/wallpapers using Rofi.
+
+set -eu
+
+dir="${WALLPAPER_DIR:-$HOME/Pictures/wallpapers}"
+state="${XDG_CONFIG_HOME:-$HOME/.config}/i3/wallpaper"
+theme="${XDG_CONFIG_HOME:-$HOME/.config}/rofi/main_without_icons.rasi"
+
+[ -d "$dir" ] || exit 1
+
+choice="$(
+    find "$dir" -maxdepth 1 -type f \
+        \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) \
+        -printf '%f\n' |
+        sort |
+        rofi -dmenu -i -p "Wallpaper" -theme "$theme"
+)" || exit 0
+
+[ -n "$choice" ] || exit 0
+
+wallpaper="$dir/$choice"
+feh --no-fehbg --bg-fill "$wallpaper"
+
+mkdir -p "$(dirname "$state")"
+printf '%s\n' "$wallpaper" > "$state"

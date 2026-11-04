@@ -162,6 +162,11 @@ main() {
     log "Installing wallpaper, font and GTK theme."
     copy_path "$REPO_DIR/home/Pictures/wallpapers/background.png" \
               "$HOME/Pictures/wallpapers/background.png"
+    copy_path "$REPO_DIR/home/.local/share/applications/wallpapers.desktop" \
+              "$DATA_HOME/applications/wallpapers.desktop"
+    if command -v update-desktop-database >/dev/null 2>&1; then
+        run update-desktop-database "$DATA_HOME/applications"
+    fi
     [ "$DRY_RUN" -eq 1 ] || mkdir -p "$DATA_HOME/fonts"
     copy_path "$REPO_DIR/usr/share/fonts/Feather.ttf" "$DATA_HOME/fonts/Feather.ttf"
     copy_path "$REPO_DIR/usr/share/themes/gtk-dark-keyitdev" \

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpapers
+Name[es]=Fondos de pantalla
+Comment=Choose a desktop wallpaper
+Comment[es]=Elegir un fondo de pantalla
+Exec=sh -c "exec \$HOME/.local/bin/rofi-wallpaper"
+Icon=preferences-desktop-wallpaper
+Terminal=false
+Categories=Settings;
+Keywords=wallpaper;background;fondo;fondo de pantalla;

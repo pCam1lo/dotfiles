@@ -3,7 +3,8 @@
 #   display-toggle dual    -> internal panel + first connected external output
 #   display-toggle laptop  -> internal panel only
 #
-# The external monitor is placed on the left by default. Override it with:
+# Outputs are bottom-aligned. The external monitor is placed on the left by
+# default. Override it with:
 #   EXTERNAL_POSITION=right display-toggle dual
 # Override the internal output with INTERNAL=... if your Xorg driver uses
 # another name (for example eDP-1).
@@ -19,6 +20,26 @@ preferred_mode() {
         found && /^[^ ]/ { exit }
         found && /\+/ { print $1; exit }
     '
+}
+
+output_geometry() {
+    output="$1"
+    xrandr --query 2>/dev/null | awk -v out="$output" '
+        $1 == out {
+            for (i = 2; i <= NF; i++) {
+                if ($i ~ /^[0-9]+x[0-9]+\+[0-9]+\+[0-9]+$/) {
+                    print $i
+                    exit
+                }
+            }
+        }
+    '
+}
+
+output_height() {
+    geometry="$(output_geometry "$1")"
+    [ -n "$geometry" ] || return 1
+    printf '%s\n' "${geometry%%+*}" | sed 's/^[0-9]*x//'
 }
 
 find_external() {
@@ -42,25 +63,55 @@ case "$1" in
         [ -n "$external" ] || external="$(find_external || true)"
 
         if [ -z "$external" ]; then
-            xrandr --output "$internal" --auto --primary
+            xrandr --output "$internal" --auto --primary --pos 0x0
         else
             mode="$(preferred_mode "$external")"
 
-            if [ "$position" = "left" ]; then
-                if [ -n "$mode" ]; then
-                    xrandr --output "$external" --mode "$mode" \
-                           --output "$internal" --auto --primary --right-of "$external"
-                else
-                    xrandr --output "$external" --auto \
-                           --output "$internal" --auto --primary --right-of "$external"
-                fi
+            if [ -n "$mode" ]; then
+                xrandr --output "$external" --mode "$mode"
             else
-                if [ -n "$mode" ]; then
-                    xrandr --output "$internal" --auto --primary \
-                           --output "$external" --mode "$mode" --right-of "$internal"
+                xrandr --output "$external" --auto
+            fi
+            xrandr --output "$internal" --auto --primary
+
+            external_height="$(output_height "$external" || true)"
+            internal_height="$(output_height "$internal" || true)"
+            external_geometry="$(output_geometry "$external")"
+            internal_geometry="$(output_geometry "$internal")"
+
+            if [ -n "$external_height" ] && [ -n "$internal_height" ] &&
+               [ -n "$external_geometry" ] && [ -n "$internal_geometry" ]; then
+                external_width="${external_geometry%%+*}"
+                external_width="${external_width%%x*}"
+                internal_width="${internal_geometry%%+*}"
+                internal_width="${internal_width%%x*}"
+
+                if [ "$external_height" -ge "$internal_height" ]; then
+                    total_height="$external_height"
                 else
-                    xrandr --output "$internal" --auto --primary \
-                           --output "$external" --auto --right-of "$internal"
+                    total_height="$internal_height"
+                fi
+
+                external_y=$((total_height - external_height))
+                internal_y=$((total_height - internal_height))
+
+                if [ "$position" = "left" ]; then
+                    external_x=0
+                    internal_x="$external_width"
+                else
+                    internal_x=0
+                    external_x="$internal_width"
+                fi
+
+                xrandr \
+                    --output "$external" --pos "${external_x}x${external_y}" \
+                    --output "$internal" --pos "${internal_x}x${internal_y}" --primary
+            else
+                # Fallback for drivers that do not report geometry as expected.
+                if [ "$position" = "left" ]; then
+                    xrandr --output "$external" --left-of "$internal"
+                else
+                    xrandr --output "$external" --right-of "$internal"
                 fi
             fi
         fi
@@ -69,7 +120,7 @@ case "$1" in
         for output in DP1 HDMI1 VGA1; do
             xrandr --output "$output" --off 2>/dev/null || true
         done
-        xrandr --output "$internal" --auto --primary
+        xrandr --output "$internal" --auto --primary --pos 0x0
         ;;
     *)
         echo "Usage: $0 dual|laptop" >&2

@@ -1,0 +1,23 @@
+#!/bin/sh
+# Switch to a workspace and enforce the odd/even monitor distribution.
+# Odd workspaces -> LVDS1; even workspaces -> first connected external output.
+
+number="${1:?usage: workspace-switch NUMBER}"
+internal="${INTERNAL:-LVDS1}"
+external=""
+
+for output in DP1 HDMI1 VGA1; do
+    if xrandr --query 2>/dev/null | grep -q "^${output} connected"; then
+        external="$output"
+        break
+    fi
+done
+
+if [ $((number % 2)) -eq 1 ]; then
+    target="$internal"
+else
+    target="${external:-$internal}"
+fi
+
+i3-msg "workspace number $number" >/dev/null 2>&1 || exit 1
+i3-msg "move workspace to output $target" >/dev/null 2>&1 || true

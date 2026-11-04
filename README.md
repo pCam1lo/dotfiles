@@ -84,6 +84,8 @@ LightDM, and does **not** replace `~/.config/xfce4`.
     │   ├── display-toggle
     │   ├── display-watch
     │   ├── lock
+    │   ├── workspace-move
+    │   ├── workspace-switch
     │   ├── microphone_mute
     │   ├── rofi-powermenu
     │   ├── rofi-screenshot
@@ -119,6 +121,7 @@ The installer installs only the missing packages with
 | `xclip` | Copies screenshots to the clipboard |
 | `maim`, `slop` | Screenshot selection |
 | `dex` | Runs XDG autostart entries |
+| `jq` | Parses i3 workspace state in the workspace helper scripts |
 | `libnotify` | `notify-send` notifications |
 | `xorg-xrandr`, `xorg-xdpyinfo` | Display and X11 information |
 | `xorg-xinput` | Touchpad toggle |
@@ -172,6 +175,11 @@ Optional:
 | `Ctrl+F4` | Stop Picom |
 | `Pause` | Area screenshot |
 | `Print` | Full-screen screenshot |
+
+Workspace switching is handled by `workspace-switch` and
+`workspace-move`: odd workspaces go to `LVDS1`, even workspaces go to the
+first connected external output. If no external output is connected, all
+workspaces remain on `LVDS1`.
 
 Free for future bindings: `Super+A`, `Super+C`, `Super+M`,
 `Super+J`, `Super+K`, `Super+L`, `Super+;`.

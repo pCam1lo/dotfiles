@@ -87,7 +87,7 @@ copy_path() {
 install_packages() {
     local packages=(
         i3-wm i3status polybar picom dunst feh xss-lock rofi alacritty
-        dmenu xclip maim slop dex libnotify xorg-xrandr xorg-xdpyinfo
+        dmenu xclip maim slop dex libnotify jq xorg-xrandr xorg-xdpyinfo
         xorg-xinput brightnessctl playerctl upower network-manager-applet
         polkit-gnome networkmanager-dmenu papirus-icon-theme
         ttf-roboto-mono ttf-opensans ttf-jetbrains-mono-nerd

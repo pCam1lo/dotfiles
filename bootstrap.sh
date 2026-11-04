@@ -30,4 +30,10 @@ git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TMP_DIR/repo"
 
 chmod +x "$TMP_DIR/repo/install.sh"
 
-"$TMP_DIR/repo/install.sh" "$@"
+# When this script is piped from curl, stdin is the script itself. Give the
+# installer the real terminal so sudo/pacman can ask for confirmation.
+if [ -r /dev/tty ]; then
+    "$TMP_DIR/repo/install.sh" "$@" < /dev/tty
+else
+    "$TMP_DIR/repo/install.sh" "$@"
+fi

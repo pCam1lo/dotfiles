@@ -21,4 +21,4 @@ if i3lock --help 2>&1 | grep -q -- '--force-clock'; then
         --bar-indicator --bar-direction=0 --bar-step=10 --bar-max-height=10 --bar-base-width=10 --bar-total-width=1920 --bar-color=00000000 --bar-pos="0:1070"
 fi
 
-exec i3lock -n -i "$wallpaper"
+exec i3lock -n -t -i "$wallpaper"

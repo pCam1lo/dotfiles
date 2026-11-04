@@ -1,0 +1,18 @@
+#!/bin/sh
+# Reapply the monitor layout when a display is connected or disconnected.
+# It compares the monitor list every two seconds; no keybinding is needed.
+
+last="$(polybar -m 2>/dev/null | sed 's/[[:space:]]*$//' | sort)"
+
+while true; do
+    sleep 2
+    current="$(polybar -m 2>/dev/null | sed 's/[[:space:]]*$//' | sort)"
+
+    if [ -n "$last" ] && [ "$current" != "$last" ]; then
+        "$HOME/.local/bin/display-toggle" dual >/dev/null 2>&1 || true
+        sleep 2
+        current="$(polybar -m 2>/dev/null | sed 's/[[:space:]]*$//' | sort)"
+    fi
+
+    last="$current"
+done

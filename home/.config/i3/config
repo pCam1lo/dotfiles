@@ -10,6 +10,7 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.local/bin/lock --nofork
 exec --no-startup-id xrandr --dpi 96
 exec_always --no-startup-id ~/.local/bin/display-toggle dual
+exec_always --no-startup-id ~/.local/bin/display-watch >/tmp/display-watch.log 2>&1 &
 
 exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/wallpapers/background.png
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
@@ -48,47 +49,30 @@ bindsym $mod+Shift+q kill
 # bindsym $mod+w exec --no-startup-id rofi -show window -no-default-config -config ~/.config/rofi/main.rasi
 bindsym $mod+e exec --no-startup-id thunar
 
-bindsym $mod+a exec --no-startup-id rofi -show drun -no-default-config -config ~/.config/rofi/dmenu.rasi
-bindsym $mod+s exec --no-startup-id thunar ~/Pictures/screenshots/
 bindsym $mod+d exec --no-startup-id rofi -show drun -no-default-config -config ~/.config/rofi/main.rasi
+
+bindsym $mod+b exec --no-startup-id brave
+bindsym $mod+n exec --no-startup-id zennotes
+bindsym $mod+s exec --no-startup-id sioyek
 
 # Optional music client: install mpd + ncmpcpp first.
 # bindsym $mod+z exec --no-startup-id alacritty -e ncmpcpp
 bindsym $mod+x exec --no-startup-id ~/.local/bin/rofi-powermenu
-bindsym $mod+c exec --no-startup-id ~/.local/bin/rofi-screenshot
-
 bindsym $mod+i exec --no-startup-id ~/.local/bin/lock
 
-bindsym $mod+b move workspace to output right
-bindsym $mod+n exec --no-startup-id ~/.local/bin/display-toggle dual
-bindsym $mod+m exec --no-startup-id ~/.local/bin/display-toggle laptop
-
-bindsym ctrl+F1 exec --no-startup-id alacritty
-bindsym ctrl+F2 exec --no-startup-id alacritty
+# Ctrl+F3 is dmenu_run (command launcher); Ctrl+F4 stops Picom.
 bindsym ctrl+F3 exec --no-startup-id dmenu_run
 bindsym ctrl+F4 exec --no-startup-id pkill picom
 
 # bindsym $mod+d exec --no-startup-id dmenu_run
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
-
-# alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
-
-# alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
@@ -262,3 +246,8 @@ mode "$mode_gaps_outer" {
 for_window [class="Qalculate-gtk"] floating enable, sticky enable
 
 for_window [title="Picture-in-Picture"] floating enable, sticky enable
+
+# Sioyek: keep the main window tiled; let its dialogs float.
+for_window [class="sioyek"] floating disable
+for_window [class="sioyek" window_role="GtkFileChooserDialog"] floating enable
+for_window [class="sioyek" window_role="dialog"] floating enable

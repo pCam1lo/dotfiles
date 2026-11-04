@@ -82,6 +82,7 @@ LightDM, and does **not** replace `~/.config/xfce4`.
     │   ├── brightness_control
     │   ├── brightness_level
     │   ├── display-toggle
+    │   ├── display-watch
     │   ├── lock
     │   ├── microphone_mute
     │   ├── rofi-powermenu
@@ -138,7 +139,9 @@ Optional:
 |---|---|
 | `i3lock-color` (AUR) | Fancy lock screen; the `lock` script falls back to plain `i3lock` |
 | `mpd`, `ncmpcpp` | Music client; the `Super+Z` binding is commented out until installed |
-| `brave-bin` (AUR) | Browser; no browser is installed by default and Firefox is not used |
+| `brave-bin` (AUR) | Browser opened by `Super+B` |
+| `zennotes-bin` (AUR) | Notes app opened by `Super+N` |
+| `sioyek-git` (AUR) | PDF viewer opened by `Super+S` |
 
 ## Keybindings
 
@@ -150,17 +153,14 @@ Optional:
 | `Super+Q` | Close the focused window |
 | `Super+Shift+Q` | Close the focused window (alternate) |
 | `Super+D` | Rofi application launcher |
-| `Super+A` | Rofi launcher with the top bar style |
 | `Super+E` | Thunar |
-| `Super+S` | Screenshots folder in Thunar |
+| `Super+B` | Open Brave |
+| `Super+N` | Open ZenNotes |
+| `Super+S` | Open Sioyek |
 | `Super+X` | Power menu |
-| `Super+C` | Screenshot menu |
 | `Super+I` | Lock screen |
-| `Super+B` | Move workspace to the output on the right |
-| `Super+N` | Internal panel + first connected external output |
-| `Super+M` | Internal panel only |
-| `Super+J/K/L/;` | Focus left/down/up/right |
-| `Super+Shift+J/K/L/;` | Move window left/down/up/right |
+| `Super+Left/Right/Up/Down` | Focus window |
+| `Super+Shift+Left/Right/Up/Down` | Move window |
 | `Super+1..0` | Switch workspace |
 | `Super+Shift+1..0` | Move window to workspace |
 | `Super+R` | Resize mode |
@@ -168,9 +168,13 @@ Optional:
 | `Super+Shift+C` | Reload i3 |
 | `Super+Shift+R` | Restart i3 |
 | `Super+Shift+E` | Exit i3 |
-| `Ctrl+F1/F2` | Alacritty |
-| `Ctrl+F3` | `dmenu_run` |
+| `Ctrl+F3` | `dmenu_run` (command launcher) |
 | `Ctrl+F4` | Stop Picom |
+| `Pause` | Area screenshot |
+| `Print` | Full-screen screenshot |
+
+Free for future bindings: `Super+A`, `Super+C`, `Super+M`,
+`Super+J`, `Super+K`, `Super+L`, `Super+;`.
 
 ## Hardware notes
 
@@ -189,9 +193,11 @@ uses different names:
 
 `display-toggle dual` runs automatically when i3 starts. It sets the internal
 panel to its preferred mode and the first connected external output to its
-preferred mode. The external output is placed on the left by default. Use
+preferred mode. The external output is placed on the left by default.
+`display-watch` checks the connected monitors every two seconds and reapplies
+the layout when a monitor is connected or disconnected. Use
 `EXTERNAL_POSITION=right ~/.local/bin/display-toggle dual` for the other side,
-`Super+N` to reapply, and `Super+M` to switch to the internal panel only.
+or `~/.local/bin/display-toggle laptop` to use only the internal panel.
 
 Check your own values with:
 
@@ -254,8 +260,12 @@ Then choose XFCE again at the login screen.
 - The ASUS fan scripts are copied but not started; they are specific to ASUS
   laptops.
 - `Super+Q` closes windows. Firefox is not installed or bound.
-- Brave is not installed by default. If you install `brave-bin`, use
-  `brave` as the command in your own bindings.
+- `Super+B` runs `brave`; install `brave-bin` if it is not present.
+- `Super+N` and `Super+S` expect `zennotes` and `sioyek` from the AUR.
+- If Ulauncher is installed, add `NotShowIn=i3;` to
+  `~/.config/autostart/ulauncher.desktop` so `dex` does not start it in i3.
+- The vanilla `i3lock` fallback uses `-t` so the lock image covers all
+  monitors.
 
 ## Credits
 

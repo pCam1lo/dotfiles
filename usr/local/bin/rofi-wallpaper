@@ -9,6 +9,11 @@ theme="${XDG_CONFIG_HOME:-$HOME/.config}/rofi/main_without_icons.rasi"
 
 [ -d "$dir" ] || exit 1
 
+# A Rofi instance locks its pidfile. When this script is launched from the
+# Rofi drun menu, close that instance before opening the wallpaper picker.
+pkill -u "$UID" -x rofi 2>/dev/null || true
+sleep 0.2
+
 choice="$(
     find "$dir" -maxdepth 1 -type f \
         \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) \

@@ -69,7 +69,9 @@ Open Rofi with `Super+D`, search for **Wallpapers**, and choose an image from
 ```
 
 The selected path is stored in `~/.config/i3/wallpaper` and restored at login.
-The lock screen reads the same file, so it uses the selected wallpaper too.
+The restore helper passes one image per connected monitor, so the wallpaper
+covers the full multi-monitor desktop. The lock screen reads the same file, so
+it uses the selected wallpaper too.
 
 ## Repository structure
 
@@ -288,6 +290,9 @@ Then choose XFCE again at the login screen.
 - `Super+Q` closes windows. Firefox is not installed or bound.
 - `Super+B` runs `brave`; install `brave-bin` if it is not present.
 - `Super+N` and `Super+S` expect `zennotes` and `sioyek` from the AUR.
+- Polybar starts exactly one bar per connected monitor. `launch.sh` uses
+  `flock` and closes the lock file descriptor before spawning Polybar, so
+  display events cannot leave duplicate or missing bars.
 - If Ulauncher is installed, add `NotShowIn=i3;` to
   `~/.config/autostart/ulauncher.desktop` so `dex` does not start it in i3.
 - The vanilla `i3lock` fallback uses `-t` so the lock image covers all

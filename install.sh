@@ -164,6 +164,7 @@ main() {
               "$HOME/Pictures/wallpapers/background.png"
     copy_path "$REPO_DIR/home/.local/share/applications/wallpapers.desktop" \
               "$DATA_HOME/applications/wallpapers.desktop"
+    run sed -i "s|@HOME@|$HOME|g" "$DATA_HOME/applications/wallpapers.desktop"
     if command -v update-desktop-database >/dev/null 2>&1; then
         run update-desktop-database "$DATA_HOME/applications"
     fi

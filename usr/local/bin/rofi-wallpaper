@@ -25,7 +25,8 @@ choice="$(
 [ -n "$choice" ] || exit 0
 
 wallpaper="$dir/$choice"
-feh --no-fehbg --bg-fill "$wallpaper"
 
 mkdir -p "$(dirname "$state")"
 printf '%s\n' "$wallpaper" > "$state"
+
+"$HOME/.local/bin/wallpaper-restore"

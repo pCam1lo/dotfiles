@@ -23,10 +23,10 @@ done
 monitors="$(polybar -m 2>/dev/null | cut -d: -f1)"
 
 if [ -z "$monitors" ]; then
-    MONITOR= polybar main --config="$CONFIG" >/tmp/polybar.log 2>&1 &
+    MONITOR= polybar main --config="$CONFIG" >/tmp/polybar.log 2>&1 9>&- &
 else
     for monitor in $monitors; do
-        MONITOR="$monitor" polybar main --config="$CONFIG" >/tmp/polybar-"$monitor".log 2>&1 &
+        MONITOR="$monitor" polybar main --config="$CONFIG" >/tmp/polybar-"$monitor".log 2>&1 9>&- &
     done
 fi
 

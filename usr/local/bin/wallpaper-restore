@@ -1,5 +1,6 @@
 #!/bin/sh
 # Restore the wallpaper saved by rofi-wallpaper, or use the default.
+# Feh needs one image argument per monitor in a multi-monitor setup.
 
 set -eu
 
@@ -16,4 +17,15 @@ if [ -z "$wallpaper" ] || [ ! -f "$wallpaper" ]; then
 fi
 
 [ -f "$wallpaper" ] || exit 0
-feh --no-fehbg --bg-fill "$wallpaper"
+
+monitor_count="$(xrandr --listmonitors 2>/dev/null | awk 'NR > 1 { count++ } END { print count + 0 }')"
+[ "$monitor_count" -ge 1 ] || monitor_count=1
+
+set --
+i=0
+while [ "$i" -lt "$monitor_count" ]; do
+    set -- "$@" "$wallpaper"
+    i=$((i + 1))
+done
+
+feh --no-fehbg --bg-fill "$@"

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Restore the wallpaper saved by rofi-wallpaper, or use the default.
-# Feh needs one image argument per monitor in a multi-monitor setup.
+# xwallpaper applies one image per output using the real monitor geometry.
 
 set -eu
 
@@ -18,6 +18,19 @@ fi
 
 [ -f "$wallpaper" ] || exit 0
 
+outputs="$(xrandr --query 2>/dev/null | awk '/ connected/ { print $1 }')"
+
+if command -v xwallpaper >/dev/null 2>&1 && [ -n "$outputs" ]; then
+    set --
+    for output in $outputs; do
+        set -- "$@" --output "$output" --zoom "$wallpaper"
+    done
+    if xwallpaper "$@"; then
+        exit 0
+    fi
+fi
+
+# Fallback for systems without xwallpaper.
 monitor_count="$(xrandr --listmonitors 2>/dev/null | awk 'NR > 1 { count++ } END { print count + 0 }')"
 [ "$monitor_count" -ge 1 ] || monitor_count=1
 

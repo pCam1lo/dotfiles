@@ -69,9 +69,10 @@ Open Rofi with `Super+D`, search for **Wallpapers**, and choose an image from
 ```
 
 The selected path is stored in `~/.config/i3/wallpaper` and restored at login.
-The restore helper passes one image per connected monitor, so the wallpaper
-covers the full multi-monitor desktop. The lock screen reads the same file, so
-it uses the selected wallpaper too.
+The restore helper uses `xwallpaper` with one `--output ... --zoom` entry per
+connected monitor, so the wallpaper covers the full multi-monitor desktop
+even when the monitors are bottom-aligned. `feh` remains as a fallback. The
+lock screen reads the same file, so it uses the selected wallpaper too.
 
 ## Repository structure
 
@@ -132,7 +133,8 @@ The installer installs only the missing packages with
 | `polybar` | Top bar |
 | `picom` | Compositor, fading and inactive-window opacity |
 | `dunst` | Notification daemon |
-| `feh` | Wallpaper setter |
+| `feh` | Wallpaper fallback setter |
+| `xwallpaper` | Per-output wallpaper sizing and multi-monitor support |
 | `xss-lock` | Locks the screen before suspend |
 | `rofi` | Application launcher, power menu and screenshot menu |
 | `alacritty` | Terminal used by `Super+Enter` |
@@ -223,7 +225,7 @@ panel to its preferred mode and the first connected external output to its
 preferred mode, then bottom-aligns both outputs using their heights. The
 external output is placed on the left by default.
 `display-watch` checks the connected monitors every two seconds and reapplies
-the layout when a monitor is connected or disconnected. Use
+the layout and wallpaper when a monitor is connected or disconnected. Use
 `EXTERNAL_POSITION=right ~/.local/bin/display-toggle dual` for the other side,
 or `~/.local/bin/display-toggle laptop` to use only the internal panel.
 

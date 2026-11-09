@@ -10,9 +10,7 @@ while true; do
 
     if [ -n "$last" ] && [ "$current" != "$last" ]; then
         "$HOME/.local/bin/display-toggle" dual >/dev/null 2>&1 || true
-        sleep 1
-        "$HOME/.local/bin/wallpaper-restore" >/dev/null 2>&1 || true
-        sleep 1
+        sleep 2
         current="$(polybar -m 2>/dev/null | sed 's/[[:space:]]*$//' | sort)"
     fi
 

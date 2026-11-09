@@ -223,9 +223,11 @@ uses different names:
 `display-toggle dual` runs automatically when i3 starts. It sets the internal
 panel to its preferred mode and the first connected external output to its
 preferred mode, then bottom-aligns both outputs using their heights. The
-external output is placed on the left by default.
-`display-watch` checks the connected monitors every two seconds and reapplies
-the layout and wallpaper when a monitor is connected or disconnected. Use
+external output is placed on the left by default. After changing the geometry
+it calls `wallpaper-restore`, so the wallpaper is reapplied to the new output
+sizes.
+`display-watch` checks the connected monitors every two seconds and reruns the
+layout when a monitor is connected or disconnected. Use
 `EXTERNAL_POSITION=right ~/.local/bin/display-toggle dual` for the other side,
 or `~/.local/bin/display-toggle laptop` to use only the internal panel.
 

@@ -129,3 +129,6 @@ case "$1" in
 esac
 
 restart_polybar
+
+# Reapply the wallpaper after the output geometry changes.
+"$HOME/.local/bin/wallpaper-restore" >/dev/null 2>&1 || true

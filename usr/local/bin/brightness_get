@@ -1,0 +1,8 @@
+#!/bin/sh
+# Print the current backlight percentage for the Polybar custom module.
+
+current="$(brightnessctl get 2>/dev/null || echo 0)"
+maximum="$(brightnessctl max 2>/dev/null || echo 1)"
+[ "$maximum" -gt 0 ] || maximum=1
+
+printf '%s%%\n' "$(( current * 100 / maximum ))"

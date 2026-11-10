@@ -98,6 +98,7 @@ lock screen reads the same file, so it uses the selected wallpaper too.
     │   ├── icons/              # notification icons
     │   ├── battery_listener
     │   ├── brightness_control
+    │   ├── brightness_get
     │   ├── brightness_level
     │   ├── display-toggle
     │   ├── display-watch
@@ -278,7 +279,7 @@ To remove the setup, delete the installed user files:
 
 ```sh
 rm -rf ~/.config/i3 ~/.config/polybar ~/.config/picom ~/.config/rofi ~/.config/dunst
-rm -rf ~/.local/bin/{battery_listener,brightness_control,brightness_level,display-toggle,lock,microphone_mute,rofi-powermenu,rofi-screenshot,screenshot,touchpad_toggle,volume_control,volume_level,volume_mute}
+rm -rf ~/.local/bin/{battery_listener,brightness_control,brightness_get,brightness_level,display-toggle,lock,microphone_mute,rofi-powermenu,rofi-screenshot,screenshot,touchpad_toggle,volume_control,volume_level,volume_mute}
 rm -rf ~/.local/share/keyitdev
 rm -rf ~/.themes/gtk-dark-keyitdev
 ```
@@ -294,6 +295,10 @@ Then choose XFCE again at the login screen.
 - `Super+Q` closes windows. Firefox is not installed or bound.
 - `Super+B` runs `brave`; install `brave-bin` if it is not present.
 - `Super+N` and `Super+S` expect `zennotes` and `sioyek` from the AUR.
+- Polybar's backlight module is a `custom/script` that calls `brightnessctl`.
+  This avoids the `Permission denied` error from writing directly to
+  `/sys/class/backlight/intel_backlight/brightness`. Click and scroll adjust
+  the internal panel's brightness.
 - Polybar starts exactly one bar per connected monitor. `launch.sh` uses
   `flock` and closes the lock file descriptor before spawning Polybar, so
   display events cannot leave duplicate or missing bars.

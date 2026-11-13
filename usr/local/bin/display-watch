@@ -6,6 +6,14 @@ last="$(polybar -m 2>/dev/null | sed 's/[[:space:]]*$//' | sort)"
 
 while true; do
     sleep 2
+
+    # A bad RandR rotation state can make every xrandr query fail and hide a
+    # connected monitor. Let display-toggle reset it and reapply the layout.
+    if ! xrandr --query >/dev/null 2>&1; then
+        "$HOME/.local/bin/display-toggle" dual >/dev/null 2>&1 || true
+        sleep 2
+    fi
+
     current="$(polybar -m 2>/dev/null | sed 's/[[:space:]]*$//' | sort)"
 
     if [ -n "$last" ] && [ "$current" != "$last" ]; then

@@ -58,6 +58,16 @@ restart_polybar() {
     fi
 }
 
+reset_rotation() {
+    # A stale rotation/reflection state can make xrandr --query fail after
+    # hotplug or resume. Reset the known outputs before reading their modes.
+    for output in "$internal" DP1 HDMI1 VGA1; do
+        xrandr --output "$output" --rotate normal >/dev/null 2>&1 || true
+    done
+}
+
+reset_rotation
+
 case "$1" in
     dual)
         [ -n "$external" ] || external="$(find_external || true)"

@@ -228,9 +228,11 @@ external output is placed on the left by default. After changing the geometry
 it calls `wallpaper-restore`, so the wallpaper is reapplied to the new output
 sizes.
 `display-watch` checks the connected monitors every two seconds and reruns the
-layout when a monitor is connected or disconnected. Use
-`EXTERNAL_POSITION=right ~/.local/bin/display-toggle dual` for the other side,
-or `~/.local/bin/display-toggle laptop` to use only the internal panel.
+layout when a monitor is connected or disconnected. It also recovers from a
+stale RandR rotation state, which can make `xrandr --query` fail and hide a
+connected monitor. Use `EXTERNAL_POSITION=right ~/.local/bin/display-toggle
+dual` for the other side, or `~/.local/bin/display-toggle laptop` to use only
+the internal panel.
 
 Check your own values with:
 
